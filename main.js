@@ -50,13 +50,17 @@ botonAdministrador.addEventListener("click", () => {
 const botonIngreasar = document.getElementById("ingresar");
 
 botonIngreasar.addEventListener("click", () => {
-    validarUsiaro()
+    if (pacienteCargadoJS == null) {
+        alert("Usuario no existe o contraseña incorrecta")
+    } else if (logeoDni.value == " " && logeoContrasenia == " ") {
+        alert("DNI o Contraseña incorrecto")
+    } else {
+        validarUsuaro()
+    }
 })
 
 botonCrearUsuario.addEventListener("click", () => {
-    if(usuarioYaExiste() === false){
-        crearUsuario()
-    }
+    crearUsuario()
 })
 
 crearUsuarioLogeo.addEventListener("click", () => {
@@ -70,7 +74,6 @@ crearUsuarioLogeo.addEventListener("click", () => {
 /* -------------------------------- FUNCIONES ------------------------------- */
 function crearUsuario() {
     if (inputNombre.value !== "" && inputApellido.value !== "" && inputDni.value !== "" && inputContrasenia.value !== "") {
-
         /* ---------------------- Almaceno inputs en un objeto ---------------------- */
         let nuevoPaciente = new Paciente(inputNombre.value, inputApellido.value, inputDni.value, inputContrasenia.value)
 
@@ -79,32 +82,31 @@ function crearUsuario() {
 
         /* ------------ Almaceno objeto en localStorage y lo paso a JSON ------------ */
         localStorage.setItem("Pacientes", JSON.stringify(listaDePacientes))
-
         alert("Usuario cargado con exito")
         sectionCrarUsuario.className = "usuario"
-
-        /* ----------- Link para redireccionas despues que toque el botón ----------- */
-        //window.location.assign("index.html")
     } else {
         alert("Complete todos los campos por favor")
     }
 }
 
 function usuarioYaExiste() {
-    const dniUsuario = pacienteCargadoArray.some((elemento) => {
-        return elemento.dni === inputDni.value
-    })
-    if (dniUsuario === true) {
-        alert("Usuario Existente")
+    if (pacienteCargadoJS == null) {
+        alert("Complete todos los campos por favor")
+    } else {
+        const dniUsuario = pacienteCargadoArray.some((elemento) => {
+            return elemento.dni === inputDni.value
+        })
+        if (dniUsuario === true) {
+            alert("Usuario Existente")
+        }
     }
 }
 
-function validarUsiaro() {
+function validarUsuaro() {
     /* -------------------------- filtro array por dni -------------------------- */
     const dniLogeo = pacienteCargadoArray.filter((elemento) => {
         return elemento.dni === logeoDni.value
     })
-
     /*agarro ese nuevo array y uso some para que me devuelva true si usuario y contraseña son corrctas */
     const contraseniaLogeo = dniLogeo.some((elemento) => {
         return elemento.contrasenia === logeoContrasenia.value
@@ -114,5 +116,4 @@ function validarUsiaro() {
     } else {
         alert("DNI o Contraseña incorrecto")
     }
-
 }
