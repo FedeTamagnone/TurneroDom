@@ -17,25 +17,31 @@
 
 
     <nav id="zonaLogeo">
-        <input type="text" name="usuario" id="usuarioLogeo" placeholder="DNI">
-        <input type="text" name="contraseña" id="contraseniaLogeo" placeholder="CONTRASEÑA">
+        <input type="text" name="usuario" id="usuarioLogeo" placeholder="DNI" autocomplete="off">
+        <input type="text" name="contraseña" id="contraseniaLogeo" placeholder="CONTRASEÑA" autocomplete="off">
         <button type="submit" id="ingresar"> INGRESAR </button>
     </nav>
     <nav>
         <button id="crearUsuarioLogeo"> Crear usuario</button>
-        <button id="olvidoContraseña"> ¿Olvidó su contraseña? </button>
+        <button id="olvidoContrasenia"> ¿Olvidó su contraseña? </button>
     </nav>
 
 
-    <section class="usuario" id="sectionCrarUsuario">
+    <section class="displayNone" id="sectionCrarUsuario">
         <h2>Crear usuario</h2>
-        <input type="text" name="" id="usuarioNombre" placeholder="NOMBRE">
-        <input type="text" name="" id="usuarioApellido" placeholder="APELLIDO">
-        <input type="text" name="" id="usuarioDni" placeholder="DNI">
-        <input type="text" name="" id="usuarioContrasenia" placeholder="CONTRASEÑA">
+        <input type="text" name="" id="usuarioNombre" placeholder="NOMBRE" autocomplete="off">
+        <input type="text" name="" id="usuarioApellido" placeholder="APELLIDO" autocomplete="off">
+        <input type="text" name="" id="usuarioDni" placeholder="DNI" autocomplete="off">
+        <input type="text" name="" id="usuarioContrasenia" placeholder="CONTRASEÑA" autocomplete="off">
         <button type="submit" id="crearUsuario"> CREAR USUARIO </button>
     </section>
 
+    <section class="displayNone" id="restablecerContrasenia">
+        <h2>Cambiar Contraseña</h2>
+        <input type="text" name="" id="inputContraseniaDni" placeholder="DNI" autocomplete="off">
+        <input type="text" name="" id="inputContraseniaContrasenia" placeholder="CONTRASEÑA" autocomplete="off">
+        <button type="submit" id="cambiarContraseniaUsuario"> Restablecer contraseña</button>
+    </section>
 
     <script src="main.js"></script>
 </body>
