@@ -6,6 +6,7 @@ const pacienteCargadoArray = JSON.parse(pacienteCargadoJS)
 const logeoDni = document.getElementById("usuarioLogeo")
 const logeoContrasenia = document.getElementById("contraseniaLogeo")
 const sectionCrarUsuario = document.getElementById("sectionCrarUsuario");
+const sectionLogeoUsuario = document.getElementById("sectionLogeoUsuario")
 
 
 /* ----------------- constantes inputs cambio de contraseña ----------------- */
@@ -18,6 +19,9 @@ let inputNombre = document.getElementById("usuarioNombre")
 let inputApellido = document.getElementById("usuarioApellido")
 let inputDni = document.getElementById("usuarioDni")
 let inputContrasenia = document.getElementById("usuarioContrasenia")
+
+/* ---------------------------- seccion Pacientes --------------------------- */
+const sectionPaciente = document.getElementById("sectionPaciente")
 
 /* ------------------------- Array listaDePacientes ------------------------- */
 
@@ -62,7 +66,9 @@ botonIngreasar.addEventListener("click", () => {
         window.location.reload()
     } else {
         validarUsuaro()
-        window.location.reload()
+        sectionLogeoUsuario.className = "displayNone"
+        imprimirPaciente()
+        //window.location.reload()
     }
 })
 
@@ -100,10 +106,11 @@ olvidoContrasenia.addEventListener("click", () => {
 const cambiarContraseniaUsuario = document.getElementById("cambiarContraseniaUsuario")
 
 cambiarContraseniaUsuario.addEventListener("click", () => {
-    if (inputContraseniaDni.value == "" && inputContraseniaContrasenia.value == "") {
+    if (inputContraseniaDni.value == " " && inputContraseniaContrasenia.value == " ") {
         alert("Porfavor complete todos los campos")
     } else {
         restablecer()
+        window.location.reload()
     }
 })
 
@@ -158,7 +165,9 @@ function restablecer() {
     //busco usuario por dni y saco su posicion en el array
     let dniUsuario = pacienteCargadoArray.findIndex((elemento) => {
         return elemento.dni === inputContraseniaDni.value
+
     })
+
 
     //en el numero de indice modifico la contraseña por el input contraseña
     listaDePacientes[dniUsuario].contrasenia = inputContraseniaContrasenia.value
@@ -169,6 +178,16 @@ function restablecer() {
     window.location.reload()
 }
 
+function imprimirPaciente() {
+    const dniLogeo = pacienteCargadoArray.filter((elemento) => {
+        return elemento.dni === logeoDni.value
+    })
+    console.log(dniLogeo);
+    sectionPaciente.className = ""
+    let titulo = document.createElement("h2")
+    titulo.innerHTML = `<h2>Bienvenido</h2>`
+    sectionPaciente.append(titulo)
+}
 
 
 //localStorage.clear() 
