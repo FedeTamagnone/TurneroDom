@@ -12,6 +12,7 @@ const sectionLogeoUsuario = document.getElementById("sectionLogeoUsuario")
 /* ----------------- constantes inputs cambio de contraseña ----------------- */
 const inputContraseniaDni = document.getElementById("inputContraseniaDni");
 const inputContraseniaContrasenia = document.getElementById("inputContraseniaContrasenia");
+const restablecerContrasenia = document.getElementById("restablecerContrasenia")
 
 /* ------------------------ constantes inputs CREAR USUARIO ------------------------ */
 
@@ -35,11 +36,13 @@ if (pacienteCargadoJS !== null) {
 
 /* --------------------------------- Objeto --------------------------------- */
 class Paciente {
-    constructor(nombre, apellido, dni, contrasenia) {
+    constructor(nombre, apellido, dni, contrasenia,turno,horario) {
         this.nombre = nombre
         this.apellido = apellido
         this.dni = dni
         this.contrasenia = contrasenia
+        this.turno = turno
+        this.horario = horario
     }
 }
 
@@ -65,9 +68,7 @@ botonIngreasar.addEventListener("click", () => {
         alert("DNI o Contraseña incorrecto")
         window.location.reload()
     } else {
-        validarUsuaro()
-        sectionLogeoUsuario.className = "displayNone"
-        imprimirPaciente()
+        validarUsuario()
         //window.location.reload()
     }
 })
@@ -102,11 +103,12 @@ olvidoContrasenia.addEventListener("click", () => {
 })
 
 
+
 /* ------------------------ boton Restablecer contraseña ------------------------ */
 const cambiarContraseniaUsuario = document.getElementById("cambiarContraseniaUsuario")
 
 cambiarContraseniaUsuario.addEventListener("click", () => {
-    if (inputContraseniaDni.value == " " && inputContraseniaContrasenia.value == " ") {
+    if (inputContraseniaContrasenia.value === "") {
         alert("Porfavor complete todos los campos")
     } else {
         restablecer()
@@ -119,7 +121,7 @@ cambiarContraseniaUsuario.addEventListener("click", () => {
 function crearUsuario() {
     if (inputNombre.value !== "" && inputApellido.value !== "" && inputDni.value !== "" && inputContrasenia.value !== "") {
         /* ---------------------- Almaceno inputs en un objeto ---------------------- */
-        let nuevoPaciente = new Paciente(inputNombre.value, inputApellido.value, inputDni.value, inputContrasenia.value)
+        let nuevoPaciente = new Paciente(inputNombre.value, inputApellido.value, inputDni.value, inputContrasenia.value, " "," ")
 
         /* ------------ pusheo nuevoPaciente a mi array listaDePacientes ------------ */
         listaDePacientes.push(nuevoPaciente)
@@ -145,7 +147,7 @@ function usuarioYaExiste() {
     }
 }
 
-function validarUsuaro() {
+function validarUsuario() {
     /* -------------------------- filtro array por dni -------------------------- */
     const dniLogeo = pacienteCargadoArray.filter((elemento) => {
         return elemento.dni === logeoDni.value
@@ -156,6 +158,8 @@ function validarUsuaro() {
     })
     if (contraseniaLogeo === true) {
         alert("Acceso Correcto")
+        sectionLogeoUsuario.className = "displayNone"
+        imprimirPaciente()
     } else {
         alert("DNI o Contraseña incorrecto")
     }
@@ -163,19 +167,21 @@ function validarUsuaro() {
 
 function restablecer() {
     //busco usuario por dni y saco su posicion en el array
+
+    // FindIndex devuelve -1 si no encuentra. Con un if condicionar la variante
     let dniUsuario = pacienteCargadoArray.findIndex((elemento) => {
         return elemento.dni === inputContraseniaDni.value
-
     })
-
-
-    //en el numero de indice modifico la contraseña por el input contraseña
-    listaDePacientes[dniUsuario].contrasenia = inputContraseniaContrasenia.value
-    //cargo lista en localStorage
-    localStorage.setItem("Pacientes", JSON.stringify(listaDePacientes))
-    alert("Se modificó contraseña correctamente")
-    restablecerContrasenia.className = "displayNone"
-    window.location.reload()
+    if (dniUsuario === -1) {
+        alert("Usuario no encontrado")
+    } else {
+        //en el numero de indice modifico la contraseña por el input contraseña
+        listaDePacientes[dniUsuario].contrasenia = inputContraseniaContrasenia.value
+        //cargo lista en localStorage
+        localStorage.setItem("Pacientes", JSON.stringify(listaDePacientes))
+        alert("Se modificó contraseña correctamente")
+        window.location.reload()
+    }
 }
 
 function imprimirPaciente() {
@@ -183,11 +189,27 @@ function imprimirPaciente() {
         return elemento.dni === logeoDni.value
     })
     console.log(dniLogeo);
+    bienvenido.className = ""
     sectionPaciente.className = ""
     let titulo = document.createElement("h2")
-    titulo.innerHTML = `<h2>Bienvenido</h2>`
-    sectionPaciente.append(titulo)
+    titulo.innerHTML = `<h2>Bienvenido ${dniLogeo[0].apellido}, ${dniLogeo[0].nombre}</h2> `
+    bienvenido.append(titulo)
 }
+
+
+/* -------------------------- Perilfil de paciente -------------------------- */
+
+/* -------------------------- Boton Reservar Turno -------------------------- */
+const reservarTurno = document.getElementById("reservarTurno")
+
+reservarTurno.addEventListener("click",() =>{
+opciones.className = ""
+})
+
+
+
+
+
 
 
 //localStorage.clear() 

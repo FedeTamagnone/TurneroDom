@@ -12,8 +12,8 @@
 <body>
     <h1>Clinica</h1>
 
-    
-    
+
+
     <section class="" id="sectionLogeoUsuario">
         <button id="administrador">Administrador</button>
         <nav id="zonaLogeo">
@@ -26,7 +26,7 @@
             <button id="olvidoContrasenia"> ¿Olvidó su contraseña? </button>
         </nav>
     </section>
-    
+
 
     <section class="displayNone" id="sectionCrarUsuario">
         <h2>Crear usuario</h2>
@@ -43,10 +43,22 @@
         <input type="text" name="" id="inputContraseniaContrasenia" placeholder="CONTRASEÑA" autocomplete="off">
         <button type="submit" id="cambiarContraseniaUsuario"> Restablecer contraseña</button>
     </section>
-<section class="displayNone" id="sectionPaciente">
-    
 
-</section>
+    <section class="displayNone" id="bienvenido" >
+    </section>
+    
+    <section class="displayNone" id="sectionPaciente">
+        
+        <button id="reservarTurno">Reservar Turno</button>
+        <br>
+        <select name="Reservar Turno" class="displayNone" id="opciones"> 
+            <option value="0"> Reservar Turno</option>
+            <option value="1"> Médico Clínico</option>
+            <option value="2"> Nutrición </option>
+        </select>
+
+        <button id="historialTurnos">Historial de Turnos</button>
+    </section>
 
 
     <script src="main.js"></script>
