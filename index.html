@@ -5,12 +5,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- --------------------------- link bootstrap ---------------------------- -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <!-- ------------------------------ link css ------------------------------- -->
     <link rel="stylesheet" href="style.css">
     <title>Turnero</title>
 </head>
 
 <body>
-    <h1>Clinica</h1>
+    <h1>Clínica</h1>
 
 
 
@@ -30,11 +34,12 @@
 
     <section class="displayNone" id="sectionCrarUsuario">
         <h2>Crear usuario</h2>
-        <input type="text" name="" id="usuarioNombre" placeholder="NOMBRE" autocomplete="off">
+        <input type="text" name="" id="usuarioNombre" placeholder="NOMBRE COMPLETO" autocomplete="off">
         <input type="text" name="" id="usuarioApellido" placeholder="APELLIDO" autocomplete="off">
         <input type="text" name="" id="usuarioDni" placeholder="DNI" autocomplete="off">
         <input type="text" name="" id="usuarioContrasenia" placeholder="CONTRASEÑA" autocomplete="off">
         <button type="submit" id="crearUsuario"> CREAR USUARIO </button>
+        <button type="button" id="cerrarPestania">X</button>
     </section>
 
     <section class="displayNone" id="restablecerContrasenia">
@@ -42,25 +47,30 @@
         <input type="text" name="" id="inputContraseniaDni" placeholder="DNI" autocomplete="off">
         <input type="text" name="" id="inputContraseniaContrasenia" placeholder="CONTRASEÑA" autocomplete="off">
         <button type="submit" id="cambiarContraseniaUsuario"> Restablecer contraseña</button>
+        <button type="button" id="cerrarPestaniaContra">X</button>
     </section>
 
-    <section class="displayNone" id="bienvenido" >
+    <section class="displayNone" id="bienvenido">
     </section>
-    
+
     <section class="displayNone" id="sectionPaciente">
-        
         <button id="reservarTurno">Reservar Turno</button>
         <br>
-        <select name="Reservar Turno" class="displayNone" id="opciones"> 
+        <select name="Reservar Turno" class="displayNone" id="opcionesEspecialidades">
             <option value="0"> Reservar Turno</option>
-            <option value="1"> Médico Clínico</option>
-            <option value="2"> Nutrición </option>
+            <option value="Médico Clínico"> Médico Clínico</option>
+            <option value="Nutrición"> Nutrición </option>
         </select>
+
+        <section id="opcionesDoctores">
+
+        </section>
+        <button type="submit" id="botonReservarTurno"> RESERVAR </button>
 
         <button id="historialTurnos">Historial de Turnos</button>
     </section>
 
-
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="main.js"></script>
 </body>
 

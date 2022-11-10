@@ -36,13 +36,11 @@ if (pacienteCargadoJS !== null) {
 
 /* --------------------------------- Objeto --------------------------------- */
 class Paciente {
-    constructor(nombre, apellido, dni, contrasenia,turno,horario) {
+    constructor(nombre, apellido, dni, contrasenia) {
         this.nombre = nombre
         this.apellido = apellido
         this.dni = dni
         this.contrasenia = contrasenia
-        this.turno = turno
-        this.horario = horario
     }
 }
 
@@ -57,16 +55,18 @@ botonAdministrador.addEventListener("click", () => {
 })
 
 
-/* -------------------- Boton Ingrear -------------------- */
+/* -------------------- Boton Ingresar -------------------- */
 const botonIngreasar = document.getElementById("ingresar");
 
 botonIngreasar.addEventListener("click", () => {
-    if (pacienteCargadoJS == null) {
-        alert("Usuario no existe o contraseña incorrecta")
-        window.location.reload()
-    } else if (logeoDni.value == " " && logeoContrasenia == " ") {
-        alert("DNI o Contraseña incorrecto")
-        window.location.reload()
+    if (pacienteCargadoJS == null || logeoDni.value == " " && logeoContrasenia.value == " ") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Usuario no existe o contraseña incorrecta',
+        })
+        logeoDni.value = ""
+        logeoContrasenia.value = ""
     } else {
         validarUsuario()
         //window.location.reload()
@@ -77,6 +77,7 @@ botonIngreasar.addEventListener("click", () => {
 /* --------------------------- boton crear Usuario -------------------------- */
 
 const botonCrearUsuario = document.getElementById("crearUsuario");
+const cerrarPestania = document.getElementById("cerrarPestania")
 
 botonCrearUsuario.addEventListener("click", () => {
     if (pacienteCargadoJS == null) {
@@ -87,17 +88,18 @@ botonCrearUsuario.addEventListener("click", () => {
     window.location.reload()
 })
 
+cerrarPestania.addEventListener("click", () => {
+    sectionCrarUsuario.className = "displayNone"
+})
 /* ---------------------- boton crear usuario en logeo ---------------------- */
 
 const crearUsuarioLogeo = document.getElementById("crearUsuarioLogeo")
-
 crearUsuarioLogeo.addEventListener("click", () => {
     sectionCrarUsuario.className = " "
 })
 
 /* ---------------------- boton cambair contraseña en logeo ---------------------- */
 const olvidoContrasenia = document.getElementById("olvidoContrasenia")
-
 olvidoContrasenia.addEventListener("click", () => {
     restablecerContrasenia.className = " "
 })
@@ -106,6 +108,7 @@ olvidoContrasenia.addEventListener("click", () => {
 
 /* ------------------------ boton Restablecer contraseña ------------------------ */
 const cambiarContraseniaUsuario = document.getElementById("cambiarContraseniaUsuario")
+const cerrarPestaniaContra = document.getElementById("cerrarPestaniaContra")
 
 cambiarContraseniaUsuario.addEventListener("click", () => {
     if (inputContraseniaContrasenia.value === "") {
@@ -115,13 +118,15 @@ cambiarContraseniaUsuario.addEventListener("click", () => {
         window.location.reload()
     }
 })
-
+cerrarPestaniaContra.addEventListener("click", () => {
+    restablecerContrasenia.className = "displayNone"
+})
 
 /* -------------------------------- FUNCIONES ------------------------------- */
 function crearUsuario() {
     if (inputNombre.value !== "" && inputApellido.value !== "" && inputDni.value !== "" && inputContrasenia.value !== "") {
         /* ---------------------- Almaceno inputs en un objeto ---------------------- */
-        let nuevoPaciente = new Paciente(inputNombre.value, inputApellido.value, inputDni.value, inputContrasenia.value, " "," ")
+        let nuevoPaciente = new Paciente(inputNombre.value, inputApellido.value, inputDni.value, inputContrasenia.value, " ", " ")
 
         /* ------------ pusheo nuevoPaciente a mi array listaDePacientes ------------ */
         listaDePacientes.push(nuevoPaciente)
@@ -162,6 +167,7 @@ function validarUsuario() {
         imprimirPaciente()
     } else {
         alert("DNI o Contraseña incorrecto")
+        window.location.reload()
     }
 }
 
@@ -183,7 +189,7 @@ function restablecer() {
         window.location.reload()
     }
 }
-
+let pacienteLogeado = []
 function imprimirPaciente() {
     const dniLogeo = pacienteCargadoArray.filter((elemento) => {
         return elemento.dni === logeoDni.value
@@ -194,21 +200,75 @@ function imprimirPaciente() {
     let titulo = document.createElement("h2")
     titulo.innerHTML = `<h2>Bienvenido ${dniLogeo[0].apellido}, ${dniLogeo[0].nombre}</h2> `
     bienvenido.append(titulo)
+    pacienteLogeado = dniLogeo
 }
 
 
-/* -------------------------- Perilfil de paciente -------------------------- */
+/* -------------------------- Perfil de paciente -------------------------- */
 
-/* -------------------------- Boton Reservar Turno -------------------------- */
+/* -------------------------- Reservar Turno -------------------------- */
+
+
 const reservarTurno = document.getElementById("reservarTurno")
-
-reservarTurno.addEventListener("click",() =>{
-opciones.className = ""
+reservarTurno.addEventListener("click", () => {
+    opcionesEspecialidades.className = ""
 })
 
 
+const botonReservarTurno = document.getElementById("botonReservarTurno")
+botonReservarTurno.addEventListener("click", (event) => {
+    event.defaultPrevented
+    console.log(`${pacienteLogeado[0].nombre} seleccionó ${valorSelecionado} con el doctor ${doctorSeleccionado}`);
+})
+
+/* ------------------------- Opciones Especialidades ------------------------ */
+
+let valorSelecionado = " "
+
+const opcionesEspecialidades = document.getElementById("opcionesEspecialidades")
+opcionesEspecialidades.addEventListener("change", (e) => {
+    let valor = e.target.value;
+    if (valor !== "0") {}
+    //asigno valor local a una valiable global
+    valorSelecionado = valor
+    //Ejecuto FN par filtrar doctores según valor seleccionado
+    cargarDoctores(valorSelecionado)
+})
 
 
+let doctorSeleccionado = " "
+/* -------------- Traigo .json y filtro según valor selecionado ------------- */
+async function cargarDoctores() {
+    const response = await fetch('/doctores.json');
+    const doctores = await response.json();
+    const listaDoctores = doctores.filter((elemento) => {
+        return elemento.especialidad === valorSelecionado
+    })
+
+    /* --------------- Creo elemento DOM según valor seleccionado --------------- */
+
+    //obtengo contenedor
+    const opcionesDoctores = document.getElementById("opcionesDoctores")
+    //limpio contenedor cada vez que ejecuto la funcion. 
+    opcionesDoctores.innerHTML = ""
+    // creo un select
+    const select = document.createElement("select")
+    // saco select si no hay ninguna especialidad seleccionada
+    if (valorSelecionado == 0) {
+        select.className = "displayNone"
+    }
+    for (const doc of listaDoctores) {
+        const option = document.createElement("option")
+        option.innerHTML = doc.nombre
+        option.setAttribute("value", doc.nombre)
+        select.append(option)
+    }
+    //capturo valor de option selecionado
+    select.addEventListener("change", () => {
+        doctorSeleccionado = select.value
+    })
+    opcionesDoctores.append(select)
+}
 
 
 
