@@ -1,4 +1,4 @@
-/* ----------------------------- constantes JSON ---------------------------- */
+/* ----------------------------- constantes JSON pacientes logeados ---------------------------- */
 const pacienteCargadoJS = localStorage.getItem("Pacientes")
 const pacienteCargadoArray = JSON.parse(pacienteCargadoJS)
 
@@ -15,7 +15,6 @@ const inputContraseniaContrasenia = document.getElementById("inputContraseniaCon
 const restablecerContrasenia = document.getElementById("restablecerContrasenia")
 
 /* ------------------------ constantes inputs CREAR USUARIO ------------------------ */
-
 let inputNombre = document.getElementById("usuarioNombre")
 let inputApellido = document.getElementById("usuarioApellido")
 let inputDni = document.getElementById("usuarioDni")
@@ -24,17 +23,16 @@ let inputContrasenia = document.getElementById("usuarioContrasenia")
 /* ---------------------------- seccion Pacientes --------------------------- */
 const sectionPaciente = document.getElementById("sectionPaciente")
 
-/* ------------------------- Array listaDePacientes ------------------------- */
-
+/* ------------------------- Array listaDePacientes Logeados ------------------------- */
 let listaDePacientes = []
 
-/* ----- inicializo array de pacientes con elementos en el localStorage ----- */
+/* ----- inicializo array de pacientes logeados con elementos en el localStorage ----- */
 if (pacienteCargadoJS !== null) {
     listaDePacientes = JSON.parse(pacienteCargadoJS)
 }
 
 
-/* --------------------------------- Objeto --------------------------------- */
+/* --------------------------------- Objeto que guarda pacientes que se logean --------------------------------- */
 class Paciente {
     constructor(nombre, apellido, dni, contrasenia) {
         this.nombre = nombre
@@ -45,7 +43,7 @@ class Paciente {
 }
 
 
-/* --------------------------------- BOTONES -------------------------------- */
+/* --------------------------------- BOTONES LOGEO -------------------------------- */
 
 /* -------------------- Boton Administrador -------------------- */
 const botonAdministrador = document.getElementById("administrador");
@@ -126,11 +124,9 @@ cerrarPestaniaContra.addEventListener("click", () => {
 function crearUsuario() {
     if (inputNombre.value !== "" && inputApellido.value !== "" && inputDni.value !== "" && inputContrasenia.value !== "") {
         /* ---------------------- Almaceno inputs en un objeto ---------------------- */
-        let nuevoPaciente = new Paciente(inputNombre.value, inputApellido.value, inputDni.value, inputContrasenia.value, " ", " ")
-
+        let nuevoPaciente = new Paciente(inputNombre.value, inputApellido.value, inputDni.value, inputContrasenia.value)
         /* ------------ pusheo nuevoPaciente a mi array listaDePacientes ------------ */
         listaDePacientes.push(nuevoPaciente)
-
         /* ------------ Almaceno objeto en localStorage y lo paso a JSON ------------ */
         localStorage.setItem("Pacientes", JSON.stringify(listaDePacientes))
         alert("Usuario cargado con exito")
@@ -173,7 +169,6 @@ function validarUsuario() {
 
 function restablecer() {
     //busco usuario por dni y saco su posicion en el array
-
     // FindIndex devuelve -1 si no encuentra. Con un if condicionar la variante
     let dniUsuario = pacienteCargadoArray.findIndex((elemento) => {
         return elemento.dni === inputContraseniaDni.value
@@ -190,13 +185,13 @@ function restablecer() {
     }
 }
 let pacienteLogeado = []
+
 function imprimirPaciente() {
     const dniLogeo = pacienteCargadoArray.filter((elemento) => {
         return elemento.dni === logeoDni.value
     })
-    console.log(dniLogeo);
     bienvenido.className = ""
-    sectionPaciente.className = ""
+    sectionPaciente.className = "cuerpoSection"
     let titulo = document.createElement("h2")
     titulo.innerHTML = `<h2>Bienvenido ${dniLogeo[0].apellido}, ${dniLogeo[0].nombre}</h2> `
     bienvenido.append(titulo)
@@ -204,28 +199,50 @@ function imprimirPaciente() {
 }
 
 
-/* -------------------------- Perfil de paciente -------------------------- */
+/* -------------------------- PERFIL DEL PACIENTE -------------------------- */
 
-/* -------------------------- Reservar Turno -------------------------- */
+/* -------------------------- Seccion Reservar Turno -------------------------- */
+const opcionesEspecialidades = document.getElementById("opcionesEspecialidades")
 
+
+//constante  del DOM pero la necesito local 
+const opcionesDoctores = document.getElementById("opcionesDoctores")
+
+//Variables que almacenan los datos obtenidos del select
+let valorSelecionado = " "
+let doctorSeleccionado = " "
+let turnosCargados = []
 
 const reservarTurno = document.getElementById("reservarTurno")
 reservarTurno.addEventListener("click", () => {
     opcionesEspecialidades.className = ""
+    opcionesEspecialidades.value = "0"
+    contenedorHistorial.className = "displayNone"
 })
 
 
 const botonReservarTurno = document.getElementById("botonReservarTurno")
 botonReservarTurno.addEventListener("click", (event) => {
     event.defaultPrevented
-    console.log(`${pacienteLogeado[0].nombre} seleccionó ${valorSelecionado} con el doctor ${doctorSeleccionado}`);
+    alert(`${pacienteLogeado[0].nombre} seleccionó ${valorSelecionado} con el Doctor ${doctorSeleccionado}`);
+    let nuevoTurno = {
+        nombre: pacienteLogeado[0].nombre,
+        apellido: pacienteLogeado[0].apellido,
+        especialidad: valorSelecionado,
+        doctor: doctorSeleccionado
+    }
+    turnosCargados.push(nuevoTurno)
+    console.log(turnosCargados);
+    //Reinicio valores y ejecuto funcion para que me dibuje desde cero
+    opcionesEspecialidades.value = "0"
+    opcionesDoctores.value = "0"
+    cargarDoctores(valorSelecionado)
 })
 
+
+
+
 /* ------------------------- Opciones Especialidades ------------------------ */
-
-let valorSelecionado = " "
-
-const opcionesEspecialidades = document.getElementById("opcionesEspecialidades")
 opcionesEspecialidades.addEventListener("change", (e) => {
     let valor = e.target.value;
     if (valor !== "0") {}
@@ -236,7 +253,6 @@ opcionesEspecialidades.addEventListener("change", (e) => {
 })
 
 
-let doctorSeleccionado = " "
 /* -------------- Traigo .json y filtro según valor selecionado ------------- */
 async function cargarDoctores() {
     const response = await fetch('/doctores.json');
@@ -246,30 +262,64 @@ async function cargarDoctores() {
     })
 
     /* --------------- Creo elemento DOM según valor seleccionado --------------- */
-
-    //obtengo contenedor
-    const opcionesDoctores = document.getElementById("opcionesDoctores")
+    // obtengo contenedor en cont global "opcionesDoctores"
     //limpio contenedor cada vez que ejecuto la funcion. 
     opcionesDoctores.innerHTML = ""
-    // creo un select
-    const select = document.createElement("select")
     // saco select si no hay ninguna especialidad seleccionada
-    if (valorSelecionado == 0) {
-        select.className = "displayNone"
+    if (opcionesEspecialidades.value !== "0") {
+        opcionesDoctores.className = ""
+    } else {
+        opcionesDoctores.className = "displayNone"
+        botonReservarTurno.className = "displayNone"
     }
+    const primerOpcion = document.createElement("option")
+    primerOpcion.setAttribute("value", "0")
+    primerOpcion.innerText = `Doctor`
+    opcionesDoctores.append(primerOpcion)
+    //Por cada doctor en JSON creo un option
     for (const doc of listaDoctores) {
-        const option = document.createElement("option")
-        option.innerHTML = doc.nombre
-        option.setAttribute("value", doc.nombre)
-        select.append(option)
+        let option = document.createElement("option")
+        option.innerText = doc.nombre
+        opcionesDoctores.append(option)
     }
-    //capturo valor de option selecionado
-    select.addEventListener("change", () => {
-        doctorSeleccionado = select.value
+    //Segun valor muestra el botón y capturno valor de input
+    opcionesDoctores.addEventListener("change", () => {
+        if (opcionesDoctores.value !== "0") {
+            botonReservarTurno.className = ""
+        } else {
+            botonReservarTurno.className = "displayNone"
+        }
+        doctorSeleccionado = opcionesDoctores.value
     })
-    opcionesDoctores.append(select)
 }
 
+/* ----------------------- Seccion Historial de Turnos ---------------------- */
 
+/* ------------------------ Boton Historial de Turnos ----------------------- */
+const historialTurnos = document.getElementById("historialTurnos")
+const contenedorHistorial = document.getElementById("contenedorHistorial")
+
+
+historialTurnos.addEventListener("click", () => {
+    //cuando hago click, agrego class para que desaparezca
+    opcionesDoctores.className = "displayNone"
+    botonReservarTurno.className = "displayNone"
+    opcionesEspecialidades.className = "displayNone"
+    contenedorHistorial.className =""
+    imprimirTurnos()    
+})
+
+
+function imprimirTurnos(){
+    contenedorHistorial.innerHTML=""
+    //uso la constante turno (objeto) para imprimir en el html
+    for (const turno of turnosCargados){
+        let lista = document.createElement("p")
+        lista.innerHTML = `Especialidad: ${turno.especialidad} Doctor: ${turno.doctor}`
+        contenedorHistorial.append(lista)
+        console.log(turno);
+    }
+    
+}
 
 //localStorage.clear() 

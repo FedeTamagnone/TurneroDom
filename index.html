@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    <h1>Clínica</h1>
+    <h1>Clínica JS</h1>
 
 
 
@@ -50,25 +50,32 @@
         <button type="button" id="cerrarPestaniaContra">X</button>
     </section>
 
+<!-- ----------------------- Pestaña usuario logeao ------------------------ -->
+
     <section class="displayNone" id="bienvenido">
     </section>
 
     <section class="displayNone" id="sectionPaciente">
         <button id="reservarTurno">Reservar Turno</button>
-        <br>
-        <select name="Reservar Turno" class="displayNone" id="opcionesEspecialidades">
-            <option value="0"> Reservar Turno</option>
-            <option value="Médico Clínico"> Médico Clínico</option>
-            <option value="Nutrición"> Nutrición </option>
-        </select>
-
-        <section id="opcionesDoctores">
-
-        </section>
-        <button type="submit" id="botonReservarTurno"> RESERVAR </button>
-
         <button id="historialTurnos">Historial de Turnos</button>
     </section>
+
+
+    <!-- ----------------------- Section Reservar Turnos ----------------------- -->
+    <section>
+        <select name="Reservar Turno" class="displayNone" id="opcionesEspecialidades">
+            <option value="0"> Especialidad </option>
+            <option value="Médico Clínico"> Médico Clínico </option>
+            <option value="Nutrición"> Nutrición </option>
+        </select>
+        <select class="displayNone" id="opcionesDoctores">
+        </select>
+        <button type="submit" id="botonReservarTurno" class="displayNone"> RESERVAR </button>
+    </section>
+
+    <!-- ----------------------- Section Historial de Turnos ----------------------- -->
+<section class="displayNone" id="contenedorHistorial">
+</section>
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="main.js"></script>
