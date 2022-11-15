@@ -305,21 +305,31 @@ historialTurnos.addEventListener("click", () => {
     opcionesDoctores.className = "displayNone"
     botonReservarTurno.className = "displayNone"
     opcionesEspecialidades.className = "displayNone"
-    contenedorHistorial.className =""
-    imprimirTurnos()    
+    contenedorHistorial.className = ""
+    imprimirTurnos()
 })
 
 
-function imprimirTurnos(){
-    contenedorHistorial.innerHTML=""
+function imprimirTurnos() {
+    contenedorHistorial.innerHTML = ""
     //uso la constante turno (objeto) para imprimir en el html
-    for (const turno of turnosCargados){
+    for (const turno of turnosCargados) {
         let lista = document.createElement("p")
-        lista.innerHTML = `Especialidad: ${turno.especialidad} Doctor: ${turno.doctor}`
+        const botonModificar = document.createElement("button")
+        const botonCancelar = document.createElement("button")
+        lista.innerHTML = `<strong> Especialidad: </strong> ${turno.especialidad} <strong> Doctor:</strong> ${turno.doctor} `
+        botonModificar.innerHTML = `</strong> Modificar turno </strong> `
+        botonCancelar.innerHTML = `</strong> Cancelar turno</strong>`
+        lista.append(botonModificar)
+        lista.append(botonCancelar)
         contenedorHistorial.append(lista)
-        console.log(turno);
-    }
-    
-}
 
+        botonModificar.addEventListener("click", () => {
+            const turnoModificar = turnosCargados.filter((elemento) => {
+                return elemento === turno
+            })
+            console.log(turnoModificar);
+        })
+    }
+}
 //localStorage.clear() 
