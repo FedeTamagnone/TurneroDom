@@ -201,6 +201,10 @@ function imprimirPaciente() {
 
 /* -------------------------- PERFIL DEL PACIENTE -------------------------- */
 
+const turnosCargadoJS = localStorage.getItem("Turnos")
+const turnosCargadoArray = JSON.parse(turnosCargadoJS)
+
+
 /* -------------------------- Seccion Reservar Turno -------------------------- */
 const opcionesEspecialidades = document.getElementById("opcionesEspecialidades")
 
@@ -211,7 +215,12 @@ const opcionesDoctores = document.getElementById("opcionesDoctores")
 //Variables que almacenan los datos obtenidos del select
 let valorSelecionado = " "
 let doctorSeleccionado = " "
+
 let turnosCargados = []
+if (turnosCargadoJS !== null) {
+    turnosCargados = JSON.parse(turnosCargadoJS)
+}
+
 
 const reservarTurno = document.getElementById("reservarTurno")
 reservarTurno.addEventListener("click", () => {
@@ -224,19 +233,28 @@ reservarTurno.addEventListener("click", () => {
 const botonReservarTurno = document.getElementById("botonReservarTurno")
 botonReservarTurno.addEventListener("click", (event) => {
     event.defaultPrevented
-    alert(`${pacienteLogeado[0].nombre} seleccionó ${valorSelecionado} con el Doctor ${doctorSeleccionado}`);
+    if (event.target.innerHTML !== "Modificar") {
+        alert(`${pacienteLogeado[0].nombre} seleccionó ${valorSelecionado} con el Doctor ${doctorSeleccionado}`);
+    } else {
+        alert("Se modificó correctamente")
+    }
     let nuevoTurno = {
         nombre: pacienteLogeado[0].nombre,
         apellido: pacienteLogeado[0].apellido,
+        dni: pacienteLogeado[0].dni,
         especialidad: valorSelecionado,
         doctor: doctorSeleccionado
     }
     turnosCargados.push(nuevoTurno)
+    localStorage.setItem("Turnos", JSON.stringify(turnosCargados))
     console.log(turnosCargados);
     //Reinicio valores y ejecuto funcion para que me dibuje desde cero
+    opcionesEspecialidades.className = "displayNone"
     opcionesEspecialidades.value = "0"
     opcionesDoctores.value = "0"
+    botonReservarTurno.innerText = "Reservar"
     cargarDoctores(valorSelecionado)
+
 })
 
 
@@ -244,6 +262,7 @@ botonReservarTurno.addEventListener("click", (event) => {
 
 /* ------------------------- Opciones Especialidades ------------------------ */
 opcionesEspecialidades.addEventListener("change", (e) => {
+
     let valor = e.target.value;
     if (valor !== "0") {}
     //asigno valor local a una valiable global
@@ -300,6 +319,9 @@ const historialTurnos = document.getElementById("historialTurnos")
 const contenedorHistorial = document.getElementById("contenedorHistorial")
 
 
+
+
+
 historialTurnos.addEventListener("click", () => {
     //cuando hago click, agrego class para que desaparezca
     opcionesDoctores.className = "displayNone"
@@ -310,26 +332,71 @@ historialTurnos.addEventListener("click", () => {
 })
 
 function imprimirTurnos() {
+    console.log(turnosCargados);
+    const filtrar = turnosCargados.filter((el) => {
+        return el.nombre === pacienteLogeado.nombre
+    })
+    console.log(filtrar);
     contenedorHistorial.innerHTML = ""
-    //uso la constante turno (objeto) para imprimir en el html
+
+    /* ---------------------------------- TABLA --------------------------------- */
+    const tabla = document.createElement("table")
+    tabla.className = "table table-striped"
+    contenedorHistorial.append(tabla)
+
+    const thead = document.createElement("thead")
+    tabla.appendChild(thead)
+
+    const tr = document.createElement("tr")
+    thead.append(tr)
+
+    let th = document.createElement("th")
+    th.innerHTML = `<th scope="col"> Especialidad </th>`
+    tr.append(th)
+
+    let th2 = document.createElement("th")
+    th2.innerHTML = `<th scope="col"> Doctor </th>`
+    tr.append(th2)
+
+    let th3 = document.createElement("th")
+    th3.innerHTML = `<th scope="col">  </th>`
+    tr.append(th3)
+
+    const tbody = document.createElement("tbody")
+    tabla.append(tbody)
+
+
     for (const turno of turnosCargados) {
-        let lista = document.createElement("p")
+        const fila = document.createElement("tr")
+
+        let espe = document.createElement("td")
+        espe.innerHTML = `${turno.especialidad}`
+
+        let espe1 = document.createElement("td")
+        espe1.innerHTML = `${turno.doctor}`
         const botonModificar = document.createElement("button")
         const botonCancelar = document.createElement("button")
-        lista.innerHTML = `<strong> Especialidad: </strong> ${turno.especialidad} <strong> Doctor:</strong> ${turno.doctor} `
         botonModificar.innerHTML = `</strong> Modificar turno </strong> `
         botonCancelar.innerHTML = `</strong> Cancelar turno</strong>`
-        lista.append(botonModificar)
-        lista.append(botonCancelar)
-        contenedorHistorial.append(lista)
+
+        fila.append(espe)
+        fila.append(espe1)
+        fila.append(botonModificar)
+        fila.append(botonCancelar)
+        tbody.append(fila)
 
         botonModificar.addEventListener("click", () => {
             let posicion = turnosCargados.indexOf(turno)
-            console.log(posicion);
-            turnosCargados = turnosCargados.slice(posicion, 1)
-            console.log(turnosCargados);
-/*             botonReservarTurno.innerText = "Modificar"
-            opcionesEspecialidades.className = "" */
+            turnosCargados.splice(posicion, 1)
+            botonReservarTurno.innerText = "Modificar"
+            opcionesEspecialidades.className = ""
+            contenedorHistorial.className = "displayNone"
+        })
+
+        botonCancelar.addEventListener("click", () => {
+            let posicion = turnosCargados.indexOf(turno)
+            turnosCargados.splice(posicion, 1)
+            localStorage.setItem("Turnos", JSON.stringify(turnosCargados))
             imprimirTurnos()
         })
     }
