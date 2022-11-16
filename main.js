@@ -309,8 +309,6 @@ historialTurnos.addEventListener("click", () => {
     imprimirTurnos()
 })
 
-let array = []
-
 function imprimirTurnos() {
     contenedorHistorial.innerHTML = ""
     //uso la constante turno (objeto) para imprimir en el html
@@ -326,10 +324,16 @@ function imprimirTurnos() {
         contenedorHistorial.append(lista)
 
         botonModificar.addEventListener("click", () => {
-            turno.especialidad = "PEPE"
-            array.push(turno)
+            let posicion = turnosCargados.indexOf(turno)
+            console.log(posicion);
+            turnosCargados = turnosCargados.slice(posicion, 1)
             console.log(turnosCargados);
+/*             botonReservarTurno.innerText = "Modificar"
+            opcionesEspecialidades.className = "" */
+            imprimirTurnos()
         })
     }
 }
+
+
 //localStorage.clear() 
