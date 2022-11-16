@@ -247,7 +247,6 @@ botonReservarTurno.addEventListener("click", (event) => {
     }
     turnosCargados.push(nuevoTurno)
     localStorage.setItem("Turnos", JSON.stringify(turnosCargados))
-    console.log(turnosCargados);
     //Reinicio valores y ejecuto funcion para que me dibuje desde cero
     opcionesEspecialidades.className = "displayNone"
     opcionesEspecialidades.value = "0"
@@ -262,7 +261,6 @@ botonReservarTurno.addEventListener("click", (event) => {
 
 /* ------------------------- Opciones Especialidades ------------------------ */
 opcionesEspecialidades.addEventListener("change", (e) => {
-
     let valor = e.target.value;
     if (valor !== "0") {}
     //asigno valor local a una valiable global
@@ -332,11 +330,10 @@ historialTurnos.addEventListener("click", () => {
 })
 
 function imprimirTurnos() {
-    console.log(turnosCargados);
     const filtrar = turnosCargados.filter((el) => {
-        return el.nombre === pacienteLogeado.nombre
+        return el.dni === pacienteLogeado[0].dni
     })
-    console.log(filtrar);
+
     contenedorHistorial.innerHTML = ""
 
     /* ---------------------------------- TABLA --------------------------------- */
@@ -366,7 +363,7 @@ function imprimirTurnos() {
     tabla.append(tbody)
 
 
-    for (const turno of turnosCargados) {
+    for (const turno of filtrar) {
         const fila = document.createElement("tr")
 
         let espe = document.createElement("td")
