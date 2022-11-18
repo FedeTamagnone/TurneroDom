@@ -501,6 +501,7 @@ cambiarContraseniaPaciente.addEventListener("click", () => {
 /* -------------------------- BOTON RESERVAR TURNO -------------------------- */
 reservarTurno.addEventListener("click", () => {
     mostrar(opcionesEspecialidades)
+    mostrar(fechas)
     opcionesEspecialidades.value = "0"
     esconder(restablecerContrasenia)
     esconder(contenedorHistorial)
