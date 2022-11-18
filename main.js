@@ -1,16 +1,18 @@
 /* -------------------------------- FUNCIONES ------------------------------- */
-
 function esconder(el) {
     el.setAttribute("class", "displayNone")
 }
+
 function sacarClass(el) {
     el.className = " "
 }
+
 function mostrar(el) {
     el.setAttribute("class", "")
 }
 
 //LOGEO
+
 function validarBotonIngresar() {
     if (pacienteCargadoJS == null || logeoDni.value == " " && logeoContrasenia.value == " ") {
         Swal.fire({
@@ -24,6 +26,7 @@ function validarBotonIngresar() {
         validarUsuario()
     }
 }
+
 function crearUsuario() {
     if (inputNombre.value !== "" && inputApellido.value !== "" && inputDni.value !== "" && inputContrasenia.value !== "") {
         /* ---------------------- Almaceno inputs en un objeto ---------------------- */
@@ -37,7 +40,7 @@ function crearUsuario() {
             title: 'Usuario cargado con exito',
         })
         esconder(sectionCrarUsuario)
-        window.location.reload()
+        setTimeout(window.location.reload.bind(window.location), 1500)
     } else {
         Swal.fire({
             icon: 'warning',
@@ -46,12 +49,14 @@ function crearUsuario() {
         })
     }
 }
+
 function usuarioYaExiste() {
     const dniUsuario = pacienteCargadoArray.some((elemento) => {
         return elemento.dni === inputDni.value
     })
     dniUsuario === true ? Swal.fire('Usuario Existente') : crearUsuario()
 }
+
 function validarUsuario() {
     /* -------------------------- filtro array por dni -------------------------- */
     const dniLogeo = pacienteCargadoArray.filter((elemento) => {
@@ -67,16 +72,19 @@ function validarUsuario() {
             title: 'Acceso Correcto',
         })
         esconder(sectionLogeoUsuario)
-        imprimirPaciente()
+        setTimeout(() => {
+            imprimirPaciente()
+        }, 1500)
     } else {
         Swal.fire({
             icon: 'error',
             title: 'ERROR !',
             text: 'DNI o Contraseña incorrecto',
         })
-        window.location.reload()
+        setTimeout(window.location.reload.bind(window.location), 1500)
     }
 }
+
 function restablecer() {
     //busco usuario por dni y saco su posicion en el array
     // FindIndex devuelve -1 si no encuentra. Con un if condicionar la variante
@@ -97,7 +105,7 @@ function restablecer() {
             icon: 'success',
             title: 'Se modificó contraseña correctamente',
         })
-        window.location.reload()
+        setTimeout(window.location.reload.bind(window.location), 1500)
     }
 }
 
@@ -110,7 +118,9 @@ function validarAdministrador() {
         })
         esconder(sectionLogeoUsuario)
         mostrar(seccionAdministrador)
-        imprimirTodo()
+        setTimeout(() => {
+            imprimirTodo()
+        }, 1500)
     } else {
         Swal.fire({
             icon: 'error',
@@ -119,6 +129,7 @@ function validarAdministrador() {
         })
     }
 }
+
 function imprimirTodo() {
     const contenedorAdmi = document.getElementById("contenedorAdmi")
     contenedorAdmi.innerHTML = ""
@@ -126,10 +137,8 @@ function imprimirTodo() {
     const tabla = document.createElement("table")
     tabla.className = "table table-striped"
     contenedorAdmi.append(tabla)
-
     const thead = document.createElement("thead")
     tabla.appendChild(thead)
-
     const tr = document.createElement("tr")
     thead.append(tr)
     let th = document.createElement("th")
@@ -147,6 +156,9 @@ function imprimirTodo() {
     let th4 = document.createElement("th")
     th4.innerHTML = `<th scope="col"> Doctor </th>`
     tr.append(th4)
+    let th5 = document.createElement("th")
+    th5.innerHTML = `<th scope="col"> Fecha </th>`
+    tr.append(th5)
     const tbody = document.createElement("tbody")
     tabla.append(tbody)
     //Ordeno Turnos A - Z 
@@ -170,16 +182,51 @@ function imprimirTodo() {
         espe3.innerHTML = `${turno.especialidad}`
         let espe4 = document.createElement("td")
         espe4.innerHTML = `${turno.doctor}`
+        let espe5 = document.createElement("td")
+        espe5.innerHTML = `${turno.fecha}`
+        console.log(turno);
         fila.append(espe)
         fila.append(espe1)
         fila.append(espe2)
         fila.append(espe3)
         fila.append(espe4)
+        fila.append(espe5)
         tbody.append(fila)
     }
 }
 
 //PACIENTE LOGEADO
+function imprimirFecha() {
+    for (let i = 1; i <= 31; i++) {
+        let dia = document.createElement("option")
+        dia.innerText = `${i}`
+        dias.append(dia)
+    }
+    for (let i = 1; i <= 12; i++) {
+        let dia = document.createElement("option")
+        dia.innerText = `${i}`
+        mes.append(dia)
+    }
+    for (let i = 2022; i <= 2023; i++) {
+        let dia = document.createElement("option")
+        dia.innerText = `${i}`
+        anio.append(dia)
+    }
+    fechas.append(dias)
+    fechas.append(mes)
+    fechas.append(anio)
+}
+
+function validarFecha() {
+    if (mes.value === now.month) {
+        if (dias.value >= now.day) {
+            return true
+        }
+    } else if (mes.value >= now.month) {
+        return true
+    }
+}
+
 function imprimirPaciente() {
     const dniLogeo = pacienteCargadoArray.filter((elemento) => {
         return elemento.dni === logeoDni.value
@@ -224,6 +271,7 @@ async function cargarDoctores() {
         doctorSeleccionado = opcionesDoctores.value
     })
 }
+
 function imprimirTurnos() {
     const filtrar = turnosCargados.filter((el) => {
         return el.dni === pacienteLogeado[0].dni
@@ -244,7 +292,7 @@ function imprimirTurnos() {
     th2.innerHTML = `<th scope="col"> Doctor </th>`
     tr.append(th2)
     let th3 = document.createElement("th")
-    th3.innerHTML = `<th scope="col">  </th>`
+    th3.innerHTML = `<th scope="col"> Fecha </th>`
     tr.append(th3)
     const tbody = document.createElement("tbody")
     tabla.append(tbody)
@@ -254,15 +302,19 @@ function imprimirTurnos() {
         espe.innerHTML = `${turno.especialidad}`
         let espe1 = document.createElement("td")
         espe1.innerHTML = `${turno.doctor}`
+        let espe2 = document.createElement("td")
+        espe2.innerHTML = `${turno.fecha}`
         const botonModificar = document.createElement("button")
         const botonCancelar = document.createElement("button")
         botonModificar.innerHTML = `</strong> Modificar turno </strong> `
         botonCancelar.innerHTML = `</strong> Cancelar turno</strong>`
         fila.append(espe)
         fila.append(espe1)
+        fila.append(espe2)
         fila.append(botonModificar)
         fila.append(botonCancelar)
         tbody.append(fila)
+        /* -------------------------- BOTON MODIFICAR TURNO ------------------------- */
         botonModificar.addEventListener("click", () => {
             let posicion = turnosCargados.indexOf(turno)
             turnosCargados.splice(posicion, 1)
@@ -270,6 +322,7 @@ function imprimirTurnos() {
             mostrar(opcionesEspecialidades)
             esconder(contenedorHistorial)
         })
+        /* -------------------------- BOTON CANCELAR TURNO -------------------------- */
         botonCancelar.addEventListener("click", () => {
             let posicion = turnosCargados.indexOf(turno)
             turnosCargados.splice(posicion, 1)
@@ -282,38 +335,34 @@ function imprimirTurnos() {
         })
     }
 }
-
-/* ----------------------------- constantes JSON pacientes logeados ---------------------------- */
+/* ------------------- CONSTANTES JSON PACIENTES LOGEADOS ------------------- */
 const pacienteCargadoJS = localStorage.getItem("Pacientes")
 const pacienteCargadoArray = JSON.parse(pacienteCargadoJS)
 
-/* ---------------------------- constantes Logeo ---------------------------- */
+/* ---------------------------- CONSTANTES LOGEO ---------------------------- */
 const logeoDni = document.getElementById("usuarioLogeo")
 const logeoContrasenia = document.getElementById("contraseniaLogeo")
 const sectionCrarUsuario = document.getElementById("sectionCrarUsuario");
 const sectionLogeoUsuario = document.getElementById("sectionLogeoUsuario")
 
-/* ----------------- constantes inputs cambio de contraseña ----------------- */
+/* ----------------- CONSTANTES INPUTS CAMBIO DE CONTRASEÑA ----------------- */
 const inputContraseniaDni = document.getElementById("inputContraseniaDni");
 const inputContraseniaContrasenia = document.getElementById("inputContraseniaContrasenia");
 const restablecerContrasenia = document.getElementById("restablecerContrasenia")
 
-/* ------------------------ constantes inputs CREAR USUARIO ------------------------ */
+/* --------------------- CONSTANTES INPUTS CREAR USUARIO -------------------- */
 let inputNombre = document.getElementById("usuarioNombre")
 let inputApellido = document.getElementById("usuarioApellido")
 let inputDni = document.getElementById("usuarioDni")
 let inputContrasenia = document.getElementById("usuarioContrasenia")
 
-/* ---------------------------- seccion Pacientes --------------------------- */
-const sectionPaciente = document.getElementById("sectionPaciente")
-
-/* ------------------------- Array listaDePacientes Logeados ------------------------- */
+/* ----------------------- ARRAY DE PACIENTES LOGEADOS ---------------------- */
 let listaDePacientes = []
-/* ----- inicializo array de pacientes logeados con elementos en el localStorage ----- */
 if (pacienteCargadoJS !== null) {
     listaDePacientes = JSON.parse(pacienteCargadoJS)
 }
-/* --------------------------------- Objeto que guarda pacientes que se logean --------------------------------- */
+
+/* ---------- OBJETO CONSTRUCTOR QUE GUARDA PACIENTES QUE SE LOGEAN --------- */
 class Paciente {
     constructor(nombre, apellido, dni, contrasenia) {
         this.nombre = nombre
@@ -331,7 +380,7 @@ const cambiarContraseniaUsuario = document.getElementById("cambiarContraseniaUsu
 const cerrarPestaniaContra = document.getElementById("cerrarPestaniaContra")
 const olvidoContrasenia = document.getElementById("olvidoContrasenia")
 
-/* --------------------  Administrador -------------------- */
+/* ------------------------------ ADMINISTRADOR ----------------------------- */
 const seccionAdministrador = document.getElementById("seccionAdministrador")
 const contenedorAdministrador = document.getElementById("contenedorAdministrador")
 const nav = document.createElement("nav")
@@ -378,8 +427,8 @@ botonIngreasar.addEventListener("click", (event) => {
 /* --------------------------- BOTON CREAR USUARIO -------------------------- */
 botonCrearUsuario.addEventListener("click", () => {
     pacienteCargadoJS == null ? crearUsuario() : usuarioYaExiste()
-    window.location.reload()
 })
+/* -------------------------- BOTON CERRAR PESTAÑA USUARIO -------------------------- */
 cerrarPestania.addEventListener("click", () => {
     esconder(sectionCrarUsuario)
 })
@@ -401,12 +450,16 @@ cambiarContraseniaUsuario.addEventListener("click", () => {
         })
     } else {
         restablecer()
-        window.location.reload()
+        setTimeout(window.location.reload.bind(window.location), 1500)
     }
 })
+/* -------------------------- BOTON CERRAR PESTAÑA CONTRA -------------------------- */
 cerrarPestaniaContra.addEventListener("click", () => {
     esconder(restablecerContrasenia)
 })
+/* ---------------------------- SECCION PACIENTES --------------------------- */
+const sectionPaciente = document.getElementById("sectionPaciente")
+
 /* -------------------------- PERFIL DEL PACIENTE -------------------------- */
 const turnosCargadoJS = localStorage.getItem("Turnos")
 const turnosCargadoArray = JSON.parse(turnosCargadoJS)
@@ -418,60 +471,95 @@ let doctorSeleccionado = " "
 if (turnosCargadoJS !== null) {
     turnosCargados = JSON.parse(turnosCargadoJS)
 }
-/* -------------------------- Seccion Reservar Turno -------------------------- */
+
+/* ------------------------- SECCION RESERVAR TURNO ------------------------- */
 const opcionesEspecialidades = document.getElementById("opcionesEspecialidades")
 const opcionesDoctores = document.getElementById("opcionesDoctores")
 const reservarTurno = document.getElementById("reservarTurno")
 const botonReservarTurno = document.getElementById("botonReservarTurno")
 const contenedorHistorial = document.getElementById("contenedorHistorial")
 const historialTurnos = document.getElementById("historialTurnos")
+const cambiarContraseniaPaciente = document.getElementById("cambiarContraseniaPaciente")
+const sectionModificarContra = document.getElementById("sectionModificarContra")
+/* ------------------------------ SECCION FECHA ----------------------------- */
+const fechas = document.getElementById("fechas")
+const DateTime = luxon.DateTime
+const now = DateTime.now()
+const dias = document.createElement("select")
+const mes = document.createElement("select")
+const anio = document.createElement("select")
+let fechaTurno = " "
 
+/* ----------------------- BOTON MODIFICAR CONTRASEÑA ----------------------- */
+cambiarContraseniaPaciente.addEventListener("click", () => {
+    esconder(contenedorHistorial)
+    esconder(opcionesEspecialidades)
+    sectionModificarContra.append(restablecerContrasenia)
+    inputContraseniaDni.value = pacienteLogeado[0].contrasenia
+    mostrar(restablecerContrasenia)
+})
 /* -------------------------- BOTON RESERVAR TURNO -------------------------- */
 reservarTurno.addEventListener("click", () => {
     mostrar(opcionesEspecialidades)
     opcionesEspecialidades.value = "0"
+    esconder(restablecerContrasenia)
     esconder(contenedorHistorial)
 })
 /* ----------------------------- BOTON RESERVAR ----------------------------- */
 botonReservarTurno.addEventListener("click", (event) => {
     event.defaultPrevented
-    event.target.innerHTML !== "Modificar" ? Swal.fire({
-        icon: 'success',
-        title: 'Turno reservado con éxito',
-    }) : Swal.fire({
-        icon: 'success',
-        title: 'Se modificó correctamente',
-    })
-    let nuevoTurno = {
-        nombre: pacienteLogeado[0].nombre,
-        apellido: pacienteLogeado[0].apellido,
-        dni: pacienteLogeado[0].dni,
-        especialidad: valorSelecionado,
-        doctor: doctorSeleccionado
+    if (validarFecha(true)) {
+        event.target.innerHTML !== "Modificar" ? Swal.fire({
+            icon: 'success',
+            title: 'Turno reservado con éxito',
+        }) : Swal.fire({
+            icon: 'success',
+            title: 'Se modificó correctamente',
+        })
+        fechaTurno = `${dias.value}/${mes.value}/${anio.value}`
+        let nuevoTurno = {
+            nombre: pacienteLogeado[0].nombre,
+            apellido: pacienteLogeado[0].apellido,
+            dni: pacienteLogeado[0].dni,
+            especialidad: valorSelecionado,
+            doctor: doctorSeleccionado,
+            fecha: fechaTurno
+        }
+        turnosCargados.push(nuevoTurno)
+        localStorage.setItem("Turnos", JSON.stringify(turnosCargados))
+        //Reinicio valores y ejecuto funcion para que me dibuje desde cero
+        esconder(opcionesEspecialidades)
+        esconder(fechas)
+        opcionesEspecialidades.value = "0"
+        opcionesDoctores.value = "0"
+        dias.value = "1"
+        mes.value = "1"
+        anio.value = "2022"
+        botonReservarTurno.innerText = "Reservar"
+        cargarDoctores(valorSelecionado)
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: 'Seleccione una fecha válida',
+        })
     }
-    turnosCargados.push(nuevoTurno)
-    localStorage.setItem("Turnos", JSON.stringify(turnosCargados))
-    //Reinicio valores y ejecuto funcion para que me dibuje desde cero
-    esconder(opcionesEspecialidades)
-    opcionesEspecialidades.value = "0"
-    opcionesDoctores.value = "0"
-    botonReservarTurno.innerText = "Reservar"
-    cargarDoctores(valorSelecionado)
 })
-/* ------------------------- Opciones Especialidades ------------------------ */
+/* ------------------------- OPCIONES ESPECIALIDADES ------------------------ */
 opcionesEspecialidades.addEventListener("change", (e) => {
     let valor = e.target.value;
     if (valor !== "0") {}
     //asigno valor local a una valiable global
     valorSelecionado = valor
     cargarDoctores(valorSelecionado)
+    imprimirFecha()
 })
-/* ------------------------ Boton Historial de Turnos ----------------------- */
+/* ------------------------ BOTON HISTORIAL DE TURNOS ----------------------- */
 historialTurnos.addEventListener("click", () => {
     //cuando hago click, agrego class para que desaparezca
     esconder(opcionesDoctores)
     esconder(opcionesEspecialidades)
     esconder(botonReservarTurno)
+    esconder(restablecerContrasenia)
     mostrar(contenedorHistorial)
     imprimirTurnos()
 })

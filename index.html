@@ -15,7 +15,6 @@
 
 <body id="body">
     <h1>Clínica JS</h1>
-
     <section class="" id="sectionLogeoUsuario">
         <nav id="contenedorAdministrador">
             <button id="administrador">Administrador</button>
@@ -30,8 +29,6 @@
             <button id="olvidoContrasenia"> ¿Olvidó su contraseña? </button>
         </nav>
     </section>
-
-    
     <section class="displayNone" id="sectionCrarUsuario">
         <h2>Crear usuario</h2>
         <input type="text" name="" id="usuarioNombre" placeholder="NOMBRE COMPLETO" autocomplete="off">
@@ -41,7 +38,6 @@
         <button type="submit" id="crearUsuario"> CREAR USUARIO </button>
         <button type="button" id="cerrarPestania">X</button>
     </section>
-
     <section class="displayNone" id="restablecerContrasenia">
         <h2 id="textoCrear">Cambiar Contraseña</h2>
         <input type="text" name="" id="inputContraseniaDni" placeholder="DNI" autocomplete="off">
@@ -49,23 +45,18 @@
         <button type="submit" id="cambiarContraseniaUsuario"> Restablecer contraseña</button>
         <button type="button" id="cerrarPestaniaContra">X</button>
     </section>
-
     <section class="displayNone" id="seccionAdministrador">
         <h2 id="textoCrear">Administrador</h2>
         <div id="contenedorAdmi"></div>
     </section>
-
     <!-- ----------------------- Pestaña usuario logeao ------------------------ -->
-
     <section class="displayNone" id="bienvenido">
     </section>
-    
     <section class="displayNone" id="sectionPaciente">
         <button id="reservarTurno">Reservar Turno</button>
         <button id="historialTurnos">Historial de Turnos</button>
+        <button id="cambiarContraseniaPaciente">Modificar Contraseña</button>
     </section>
-
-
     <!-- ----------------------- Section Reservar Turnos ----------------------- -->
     <section>
         <select name="Reservar Turno" class="displayNone" id="opcionesEspecialidades">
@@ -74,17 +65,16 @@
             <option value="Nutrición"> Nutrición </option>
             <option value="Ginecólogo"> Ginecólogo </option>
         </select>
-
+        <section id="sectionModificarContra"></section>
         <select class="displayNone" id="opcionesDoctores">
         </select>
-
+        <section id="fechas"></section>
         <button type="submit" id="botonReservarTurno" class="displayNone"> RESERVAR </button>
     </section>
-
     <!-- ----------------------- Section Historial de Turnos ----------------------- -->
     <section class="displayNone" id="contenedorHistorial">
     </section>
-
+    <script src="https://cdn.jsdelivr.net/npm/luxon@2.3.0/build/global/luxon.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="main.js"></script>
 </body>
