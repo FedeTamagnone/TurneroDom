@@ -494,9 +494,9 @@ let fechaTurno = " "
 cambiarContraseniaPaciente.addEventListener("click", () => {
     esconder(contenedorHistorial)
     esconder(opcionesEspecialidades)
+    esconder(restablecerContrasenia)
     sectionModificarContra.append(restablecerContrasenia)
     inputContraseniaDni.value = pacienteLogeado[0].contrasenia
-    mostrar(restablecerContrasenia)
 })
 /* -------------------------- BOTON RESERVAR TURNO -------------------------- */
 reservarTurno.addEventListener("click", () => {
