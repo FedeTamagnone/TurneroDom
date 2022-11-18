@@ -269,6 +269,7 @@ async function cargarDoctores() {
     opcionesDoctores.addEventListener("change", () => {
         opcionesDoctores.value !== "0" ? botonReservarTurno.className = "" : botonReservarTurno.className = "displayNone"
         doctorSeleccionado = opcionesDoctores.value
+        mostrar(fechas)
     })
 }
 
@@ -494,14 +495,14 @@ let fechaTurno = " "
 cambiarContraseniaPaciente.addEventListener("click", () => {
     esconder(contenedorHistorial)
     esconder(opcionesEspecialidades)
-    esconder(restablecerContrasenia)
+    esconder(fechas)
     sectionModificarContra.append(restablecerContrasenia)
     inputContraseniaDni.value = pacienteLogeado[0].contrasenia
+    mostrar(restablecerContrasenia)
 })
 /* -------------------------- BOTON RESERVAR TURNO -------------------------- */
 reservarTurno.addEventListener("click", () => {
     mostrar(opcionesEspecialidades)
-    mostrar(fechas)
     opcionesEspecialidades.value = "0"
     esconder(restablecerContrasenia)
     esconder(contenedorHistorial)
@@ -561,6 +562,7 @@ historialTurnos.addEventListener("click", () => {
     esconder(opcionesEspecialidades)
     esconder(botonReservarTurno)
     esconder(restablecerContrasenia)
+    esconder(fechas)
     mostrar(contenedorHistorial)
     imprimirTurnos()
 })
